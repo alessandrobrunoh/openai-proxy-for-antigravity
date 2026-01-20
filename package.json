@@ -39,9 +39,7 @@
     "@openauthjs/openauth": "^0.4.3",
     "fastify": "^5.2.0",
     "open": "^11.0.0",
-    "proper-lockfile": "^4.1.2",
-    "xdg-basedir": "^5.1.0",
-    "zod": "^3.24.0"
+    "proper-lockfile": "^4.1.2"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
