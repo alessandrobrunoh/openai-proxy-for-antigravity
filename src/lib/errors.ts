@@ -1,5 +1,5 @@
 /**
- * Custom error types for opencode-antigravity-auth plugin.
+ * Custom error types for antigravity-proxy.
  * 
  * Ported from LLM-API-Key-Proxy for robust error handling.
  */

@@ -1,378 +1,209 @@
-# Antigravity Proxy
+# 🚀 Antigravity Proxy
 
-**OpenAI-compatible proxy server for Google Antigravity API**
+<div align="center">
 
-Enables [Zed IDE](https://zed.dev) and other OpenAI-compatible clients to use Google's Antigravity API, which provides access to:
-- **Claude Opus 4.5 & Sonnet 4.5** (including thinking models)
-- **Gemini 3 Pro & Flash** (with extended thinking)
-- **Gemini 2.5 Pro & Flash** (via Gemini CLI quota)
+**OpenAI-compatible gateway for Google's internal Antigravity API**
 
----
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-green)](https://nodejs.org)
+[![Docker](https://img.shields.io/badge/Docker-Supported-blue)](https://www.docker.com/)
+[![Zed](https://img.shields.io/badge/Zed-Compatible-purple)](https://zed.dev)
 
-## ✨ Features
+*Unlock the full power of Google's internal AI models in your favorite local tools.*
 
-- **OpenAI-Compatible API**: Works with any client that supports OpenAI's chat completions API
-- **Multi-Account Support**: Automatic rotation across multiple Google accounts
-- **Rate Limit Handling**: Intelligent account switching when limits are hit
-- **OAuth Token Management**: Automatic token refresh
-- **Admin Dashboard**: Web UI for monitoring usage, accounts, and metrics
-- **Multiple Deployment Options**: Local service, Docker, or standalone
-- **Zero Configuration**: Uses existing `~/.config/opencode/antigravity-accounts.json` from opencode-antigravity-auth
+</div>
+
+> [!WARNING]
+> **EXPERIMENTAL PROJECT**: This project is currently a work-in-progress (test phase) and is NOT complete.
+> At this time, **only Gemini 3 Pro is confirmed to be working**. Other models may fail or behave unexpectedly.
 
 ---
 
-## 🚀 Quick Start
+## 📖 Overview
+
+**Antigravity Proxy** is a standalone local server that acts as a bridge between OpenAI-compatible clients (like [Zed IDE](https://zed.dev), VS Code, or Cursor) and Google's powerful **Antigravity API**.
+
+### 🌟 Key Features
+
+- **🔌 OpenAI Compatibility**: Drop-in replacement for any tool expecting an OpenAI-like API.
+- **🔐 Standalone Authentication**: Built-in OAuth wizard to securely connect your Google account.
+- **🔄 Multi-Account Rotation**: Automatically rotates between multiple Google accounts to maximize quota.
+- **⚡ Smart Rate Limiting**: Detects 429 errors and switches accounts instantly.
+- **📊 Admin Dashboard**: Web UI to monitor uptime, requests, and token usage.
+
+---
+
+## 🤖 Supported Models
+
+| Model Name | Status | Capabilities |
+|------------|--------|--------------|
+| `antigravity-gemini-3-pro` | ✅ **Working** | 1M+ Context, 🛠️ Tools |
+| `antigravity-claude-sonnet-4-5-thinking` | 🚧 *Testing* | Schema Validation Errors |
+| `antigravity-claude-sonnet-4-5` | 🚧 *Testing* | Unstable |
+| `antigravity-claude-opus-4-5-thinking` | 🚧 *Testing* | Schema Validation Errors |
+| `antigravity-gemini-3-flash` | 🚧 *Testing* | Unstable |
+| `gemini-2.5-pro` | 🚧 *Testing* | (via CLI quota) |
+
+---
+
+## ⚡ Quick Start
 
 ### Prerequisites
+- Node.js 20+ (or Docker)
+- A Google Account
 
-- Node.js 20+ installed
-- Authenticated Google account via [opencode-antigravity-auth](https://github.com/NoeFabris/opencode-antigravity-auth)
+### 📦 Local Installation
 
-### Option 1: Local Installation (macOS Service)
+1.  **Clone and Install**
+    ```bash
+    npm install
+    npm run build
+    ```
 
-```bash
-# Install dependencies and build
-npm install
-npm run build
+2.  **Authenticate**
+    Run the setup wizard to connect your Google account(s).
+    ```bash
+    npm run auth
+    ```
+    *This opens your browser for OAuth login. Credentials are saved locally to `~/.config/antigravity-proxy`.*
 
-# Install as macOS LaunchAgent (auto-starts on boot)
-npm run install-service
+3.  **Start the Server**
+    ```bash
+    npm start
+    ```
+    The proxy is now running at `http://localhost:3000`.
 
-# Verify it's running
-curl http://localhost:3000/health
-```
+### 🐳 Docker Installation
 
-### Option 2: Docker
+If you prefer keeping your host clean:
 
-```bash
-# Build and run with docker-compose
-npm run docker:up
+1.  **Authenticate (One-time setup)**
+    We need to generate the credentials file on your host machine first so Docker can mount it.
+    ```bash
+    npm run auth
+    ```
 
-# Or build manually
-docker build -f docker/Dockerfile -t antigravity-proxy .
-docker run -d -p 3000:3000 \
-  -v ~/.config/opencode:/app/config:ro \
-  antigravity-proxy
-```
+2.  **Run with Docker Compose**
+    ```bash
+    npm run docker:up
+    ```
 
-### Option 3: Development Mode
-
-```bash
-npm install
-npm run dev
-```
+    To view logs: `npm run docker:logs`
+    To stop: `npm run docker:down`
 
 ---
 
-## 🔧 Configuration for Zed IDE
+## 🛠️ Configuration
 
-Generate Zed configuration:
+### Integration with Zed IDE
 
-```bash
-npm run generate-zed-config
-```
+We provide a helper script to generate the exact JSON configuration needed for Zed.
 
-This outputs a JSON configuration. Add it to your Zed settings (`~/.config/zed/settings.json`):
+1.  **Generate Config:**
+    ```bash
+    npm run generate-zed-config
+    ```
 
-```json
-{
-  "language_models": {
-    "openai_compatible": {
-      "Antigravity": {
-        "api_url": "http://localhost:3000/v1",
-        "available_models": [
-          {
-            "name": "antigravity-claude-sonnet-4-5-thinking",
-            "display_name": "Claude Sonnet 4.5 Thinking (Antigravity)",
-            "max_tokens": 200000,
-            "max_output_tokens": 64000,
-            "supports_tools": true,
-            "supports_images": true
-          },
-          {
-            "name": "antigravity-gemini-3-pro",
-            "display_name": "Gemini 3 Pro (Antigravity)",
-            "max_tokens": 1048576,
-            "max_output_tokens": 65535,
-            "supports_tools": true,
-            "supports_images": true
+2.  **Apply Settings:**
+    Copy the output into your Zed `settings.json`:
+
+    ```json
+    {
+      "language_models": {
+        "openai_compatible": {
+          "Antigravity": {
+            "api_url": "http://localhost:3000/v1",
+            "available_models": [
+              {
+                "name": "antigravity-claude-opus-4-5-thinking",
+                "display_name": "Claude Opus 4.5 Thinking (Antigravity)",
+                "max_tokens": 200000,
+                "max_output_tokens": 64000,
+                "capabilities": {
+                  "tools": true,
+                  "images": true,
+                  "parallel_tool_calls": true,
+                  "prompt_cache_key": true
+                }
+              },
+              {
+                "name": "antigravity-gemini-3-pro",
+                "display_name": "Gemini 3 Pro (Antigravity)",
+                "max_tokens": 1048576,
+                "max_output_tokens": 65535,
+                "capabilities": {
+                  "tools": true,
+                  "images": true,
+                  "parallel_tool_calls": true,
+                  "prompt_cache_key": true
+                }
+              }
+            ]
           }
-          // ... more models
-        ]
+        }
       }
     }
-  }
-}
-```
+    ```
 
-Then in Zed:
-1. Open Agent Panel
-2. Select model from "Antigravity" provider
-3. Start using!
+3.  **Select Model:**
+    Open the Assistant Panel in Zed, click the provider dropdown, and select **Antigravity**.
 
 ---
 
 ## 📊 Admin Dashboard
 
-Access the web dashboard at: **http://localhost:3000/admin**
+Visit **[http://localhost:3000/admin](http://localhost:3000/admin)** to access the dashboard.
 
-Features:
-- Real-time server status
-- Account monitoring and rate limit status
-- Usage metrics and statistics
-- Request logs
+- **Status**: Check if your accounts are active or rate-limited.
+- **Metrics**: View success rates and average response times.
+- **Logs**: Inspect recent requests for debugging.
 
 ---
 
-## 🔐 Authentication
+## ⚙️ Advanced Usage
 
-This proxy reuses authentication from `opencode-antigravity-auth`. 
-
-If you haven't authenticated yet:
-
-```bash
-# In the opencode-antigravity-auth directory
-cd ../opencode-antigravity-auth
-opencode auth login
-```
-
-The proxy will automatically find accounts at `~/.config/opencode/antigravity-accounts.json`.
-
----
-
-## 📡 API Endpoints
-
-### POST /v1/chat/completions
-OpenAI-compatible chat completions endpoint.
-
-**Example:**
-```bash
-curl -X POST http://localhost:3000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "antigravity-claude-sonnet-4-5-thinking",
-    "messages": [
-      {"role": "user", "content": "Hello!"}
-    ],
-    "stream": false
-  }'
-```
-
-### GET /v1/models
-List available models.
+### macOS Service (Auto-start)
+Install the proxy as a LaunchAgent to start automatically when you log in.
 
 ```bash
-curl http://localhost:3000/v1/models
-```
-
-### GET /health
-Health check endpoint.
-
-```bash
-curl http://localhost:3000/health
-```
-
----
-
-## 🐳 Docker Deployment
-
-### Using Docker Compose
-
-```bash
-# Start
-docker-compose -f docker/docker-compose.yml up -d
-
-# View logs
-docker-compose -f docker/docker-compose.yml logs -f
-
-# Stop
-docker-compose -f docker/docker-compose.yml down
-```
-
-### Manual Docker
-
-```bash
-# Build
-docker build -f docker/Dockerfile -t antigravity-proxy .
-
-# Run
-docker run -d \
-  -p 3000:3000 \
-  -v ~/.config/opencode:/app/config:ro \
-  --name antigravity-proxy \
-  antigravity-proxy
-
-# Logs
-docker logs -f antigravity-proxy
-```
-
----
-
-## 🍎 macOS Service Management
-
-### Install Service
-
-```bash
+# Install
 ./scripts/install-macos-service.sh
-```
 
-The service will:
-- Auto-start on system boot
-- Restart automatically if it crashes
-- Log to `~/Library/Logs/AntigravityProxy/`
-
-### Manage Service
-
-```bash
-# Check status
-launchctl list | grep antigravity
-
-# View logs
-tail -f ~/Library/Logs/AntigravityProxy/antigravity-proxy.log
-
-# Stop service
-launchctl stop com.antigravity.proxy
-
-# Start service
-launchctl start com.antigravity.proxy
-
-# Uninstall completely
+# Uninstall
 ./scripts/uninstall-macos-service.sh
 ```
 
----
-
-## 🔍 Troubleshooting
-
-### "No accounts configured" error
-
-Make sure you've authenticated with opencode-antigravity-auth:
-
-```bash
-cd ../opencode-antigravity-auth
-opencode auth login
-```
-
-The proxy looks for accounts at: `~/.config/opencode/antigravity-accounts.json`
-
-### "All accounts rate-limited" error
-
-All your Google accounts have hit rate limits. You can:
-- Wait for limits to reset (check dashboard for reset times)
-- Add more accounts: `opencode auth login` (in opencode-antigravity-auth)
-
-### Connection errors in Zed
-
-1. Verify proxy is running: `curl http://localhost:3000/health`
-2. Check Zed settings have correct `api_url`: `http://localhost:3000/v1`
-3. Check logs: `tail -f ~/Library/Logs/AntigravityProxy/antigravity-proxy.log`
-
-### Port 3000 already in use
-
-Change the port:
-
-```bash
-PORT=3001 npm start
-```
-
-Or in Docker:
-
-```bash
-docker run -d -p 3001:3000 ...
-```
-
-Update Zed config to use the new port.
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────┐         ┌──────────────────┐         ┌─────────────────┐
-│   Zed IDE   │ ──────▶ │  Proxy Server    │ ──────▶ │  Antigravity    │
-│             │  OpenAI │  (localhost:3000)│  OAuth  │  API (Google)   │
-│  settings   │  format │  - OAuth refresh │  Bearer │                 │
-│  .json      │         │  - Request xform │  Token  │  Claude/Gemini  │
-└─────────────┘         └──────────────────┘         └─────────────────┘
-                               │
-                               ▼
-                        ┌──────────────┐
-                        │   Accounts   │
-                        │ (shared with │
-                        │  OpenCode)   │
-                        └──────────────┘
-```
-
-**Key Components:**
-- **OpenAI Adapter**: Converts OpenAI format ↔ Antigravity format
-- **Account Manager**: Handles multi-account rotation and rate limiting
-- **OAuth Handler**: Automatic token refresh
-- **Admin Dashboard**: Real-time monitoring UI
-
----
-
-## 🛠️ Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run in development mode (auto-reload)
-npm run dev
-
-# Type checking only
-npm run typecheck
-
-# Build for production
-npm run build
-
-# Run production build
-npm start
-```
-
----
-
-## 📝 Environment Variables
+### Environment Variables
+You can customize the proxy via `.env` file or environment variables:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | `3000` | Server port |
-| `HOST` | `0.0.0.0` | Server host |
-| `NODE_ENV` | `production` | Environment |
-| `LOG_LEVEL` | `info` | Logging level (`debug`, `info`, `warn`, `error`) |
-| `CONFIG_DIR` | `~/.config/opencode` | Config directory |
-| `ADMIN_ENABLED` | `true` | Enable admin dashboard |
+| `PORT` | `3000` | HTTP Server port |
+| `LOG_LEVEL` | `info` | Logging verbosity (`debug`, `info`, `error`) |
+| `CONFIG_DIR` | `~/.config/antigravity-proxy` | Custom path for credentials storage |
+| `ADMIN_ENABLED` | `true` | Enable/Disable the web dashboard |
+
+---
+
+## ⚠️ Disclaimer
+
+**Educational Purpose Only.**
+This software is a proxy tool intended for personal, educational, and internal development use.
+
+- This project is **not affiliated** with Google.
+- Use of this tool may violate Google's Terms of Service.
+- Your accounts may be suspended or rate-limited. **Use secondary accounts.**
+- No guarantees are provided regarding API stability or availability.
 
 ---
 
 ## 📜 License
 
-MIT License - see [LICENSE](LICENSE) for details.
+**Author:** [Alessandro Bruno](https://github.com/alessandrobrunoh)  
+**License:** MIT
 
 ---
 
-## 🙏 Credits
-
-Based on [opencode-antigravity-auth](https://github.com/NoeFabris/opencode-antigravity-auth) by [@NoeFabris](https://github.com/NoeFabris).
-
----
-
-## ⚠️ Legal Disclaimer
-
-This proxy may violate Google's Terms of Service. Use at your own risk for personal/internal development only.
-
-- **Not affiliated with Google**
-- **No guarantees** - APIs may change without notice
-- **Account risk** - Google may suspend accounts using this
-- **Assumption of risk** - You assume all legal and technical risks
-
----
-
-## 🔗 Related Projects
-
-- [opencode-antigravity-auth](https://github.com/NoeFabris/opencode-antigravity-auth) - OpenCode plugin for Antigravity OAuth
-- [Zed IDE](https://zed.dev) - High-performance code editor
-
----
-
-**Made with ❤️ for the coding community**
+<div align="center">
+  <sub>Made with ❤️ for the Open Source community</sub>
+</div>

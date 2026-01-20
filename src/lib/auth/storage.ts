@@ -200,16 +200,20 @@ export interface AccountStorageV3 {
 type AnyAccountStorage = AccountStorageV1 | AccountStorage | AccountStorageV3;
 
 function getConfigDir(): string {
+  if (process.env.CONFIG_DIR) {
+    return process.env.CONFIG_DIR;
+  }
+
   const platform = process.platform;
   if (platform === "win32") {
     return join(
       process.env.APPDATA || join(homedir(), "AppData", "Roaming"),
-      "opencode",
+      "antigravity-proxy",
     );
   }
 
   const xdgConfig = process.env.XDG_CONFIG_HOME || join(homedir(), ".config");
-  return join(xdgConfig, "opencode");
+  return join(xdgConfig, "antigravity-proxy");
 }
 
 export function getStoragePath(): string {

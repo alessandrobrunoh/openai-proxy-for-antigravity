@@ -1,6 +1,5 @@
 /**
  * Simple logger for antigravity-proxy (standalone version)
- * Adapted from opencode-antigravity-auth/src/plugin/logger.ts
  */
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';

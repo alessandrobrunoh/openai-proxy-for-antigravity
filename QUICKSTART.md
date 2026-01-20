@@ -1,5 +1,9 @@
 # Antigravity Proxy - Quick Start
 
+> [!WARNING]
+> **EXPERIMENTAL**: This project is in a test phase and is currently incomplete.
+> **Only Gemini 3 Pro is currently supported and working.**
+
 ## 🚀 Setup in 3 Steps
 
 ### 1. Install Dependencies
@@ -9,14 +13,13 @@ npm run build
 ```
 
 ### 2. Authenticate
-This proxy uses accounts from `opencode-antigravity-auth`. If you haven't authenticated yet:
+Run the built-in authentication wizard to connect your Google account:
 
 ```bash
-cd ../opencode-antigravity-auth
-opencode auth login
+npm run auth
 ```
 
-The proxy will automatically find accounts at `~/.config/opencode/antigravity-accounts.json`.
+This will open your browser for login and save credentials to `~/.config/antigravity-proxy/antigravity-accounts.json`.
 
 ### 3. Start the Proxy
 

@@ -152,6 +152,7 @@ export class OpenAIToAntigravityAdapter {
       }
     }
 
+    // Process fields
     for (const [key, value] of Object.entries(inputSchema)) {
       if (this.UNSUPPORTED_SCHEMA_FIELDS.has(key)) {
         continue;
@@ -182,6 +183,21 @@ export class OpenAIToAntigravityAdapter {
         }
       } else {
         result[key] = value;
+      }
+    }
+
+    // Heuristic: If 'type' is missing but 'anyOf' is present, try to infer type
+    // This fixes "JSON schema is invalid" errors with Claude which requires explicit types
+    if (!result.type && result.anyOf && Array.isArray(result.anyOf)) {
+      const types = new Set<string>();
+      for (const option of result.anyOf as Array<{ type?: string }>) {
+        if (option.type) {
+          types.add(option.type);
+        }
+      }
+      // If all options share the same type, hoist it
+      if (types.size === 1) {
+        result.type = Array.from(types)[0];
       }
     }
 
