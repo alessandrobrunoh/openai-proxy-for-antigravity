@@ -19,7 +19,7 @@ const PORT = 51121;
 
 async function main() {
   console.log('');
-  console.log('🔐 Antigravity Proxy Authentication');
+  console.log('🔐 OpenAI Proxy for Antigravity Authentication');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('');
 

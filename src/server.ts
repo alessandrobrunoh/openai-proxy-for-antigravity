@@ -88,7 +88,7 @@ async function main() {
   // Root endpoint
   server.get('/', async () => {
     return {
-      name: 'Antigravity Proxy',
+      name: 'OpenAI Proxy for Antigravity',
       version: '1.0.0',
       description: 'OpenAI-compatible proxy for Google Antigravity API',
       endpoints: {
@@ -123,7 +123,7 @@ async function main() {
     await server.listen({ port, host });
     
     console.log('');
-    console.log('🚀 Antigravity Proxy Server');
+    console.log('🚀 OpenAI Proxy for Antigravity');
     console.log('━'.repeat(50));
     console.log(`   Local:    http://localhost:${port}`);
     console.log(`   Network:  http://${host}:${port}`);

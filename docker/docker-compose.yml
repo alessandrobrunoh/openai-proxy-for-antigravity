@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  antigravity-proxy:
+  openai-proxy-for-antigravity:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    container_name: antigravity-proxy
+    container_name: openai-proxy-for-antigravity
     ports:
       - "3000:3000"
     volumes:

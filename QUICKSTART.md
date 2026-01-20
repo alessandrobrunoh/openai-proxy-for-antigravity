@@ -1,4 +1,4 @@
-# Antigravity Proxy - Quick Start
+# OpenAI Proxy for Antigravity - Quick Start
 
 > [!WARNING]
 > **EXPERIMENTAL**: This project is in a test phase and is currently incomplete.

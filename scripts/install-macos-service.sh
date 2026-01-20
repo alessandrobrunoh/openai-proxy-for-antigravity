@@ -1,15 +1,15 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Installing Antigravity Proxy as macOS LaunchAgent..."
+echo "🚀 Installing OpenAI Proxy for Antigravity as macOS LaunchAgent..."
 echo ""
 
 # Get absolute paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_DIR="$(dirname "$SCRIPT_DIR")"
-LOG_DIR="$HOME/Library/Logs/AntigravityProxy"
-PLIST_SRC="$INSTALL_DIR/templates/com.antigravity.proxy.plist"
-PLIST_DEST="$HOME/Library/LaunchAgents/com.antigravity.proxy.plist"
+LOG_DIR="$HOME/Library/Logs/OpenAIProxyAntigravity"
+PLIST_SRC="$INSTALL_DIR/templates/com.openai.proxy.antigravity.plist"
+PLIST_DEST="$HOME/Library/LaunchAgents/com.openai.proxy.antigravity.plist"
 
 # Ensure we're in the project directory
 cd "$INSTALL_DIR"

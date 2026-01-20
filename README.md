@@ -1,4 +1,4 @@
-# 🚀 Antigravity Proxy
+# 🚀 OpenAI Proxy for Antigravity
 
 <div align="center">
 
@@ -21,7 +21,7 @@
 
 ## 📖 Overview
 
-**Antigravity Proxy** is a standalone local server that acts as a bridge between OpenAI-compatible clients (like [Zed IDE](https://zed.dev), VS Code, or Cursor) and Google's powerful **Antigravity API**.
+**OpenAI Proxy for Antigravity** is a standalone local server that acts as a bridge between OpenAI-compatible clients (like [Zed IDE](https://zed.dev), VS Code, or Cursor) and Google's powerful **Antigravity API**.
 
 ### 🌟 Key Features
 

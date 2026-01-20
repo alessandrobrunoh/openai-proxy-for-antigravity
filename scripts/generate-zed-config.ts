@@ -109,7 +109,7 @@ const config = {
 };
 
 console.log('');
-console.log('🔧 Antigravity Proxy - Zed IDE Configuration Generator');
+console.log('🔧 OpenAI Proxy for Antigravity - Zed IDE Configuration Generator');
 console.log('━'.repeat(60));
 console.log('');
 console.log('Generated configuration:');

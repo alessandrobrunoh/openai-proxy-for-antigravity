@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.antigravity.proxy</string>
+    <string>com.openai.proxy.antigravity</string>
     
     <key>ProgramArguments</key>
     <array>
@@ -33,10 +33,10 @@
     <true/>
     
     <key>StandardOutPath</key>
-    <string>__LOG_DIR__/antigravity-proxy.log</string>
+    <string>__LOG_DIR__/openai-proxy-antigravity.log</string>
     
     <key>StandardErrorPath</key>
-    <string>__LOG_DIR__/antigravity-proxy-error.log</string>
+    <string>__LOG_DIR__/openai-proxy-antigravity-error.log</string>
     
     <key>ProcessType</key>
     <string>Interactive</string>

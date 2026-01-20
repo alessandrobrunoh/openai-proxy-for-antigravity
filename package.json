@@ -1,5 +1,5 @@
 {
-  "name": "antigravity-proxy",
+  "name": "openai-proxy-for-antigravity",
   "version": "1.0.0",
   "description": "OpenAI-compatible proxy for Google Antigravity API",
   "main": "dist/server.js",

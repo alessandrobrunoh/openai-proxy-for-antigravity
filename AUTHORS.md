@@ -1,5 +1,5 @@
 # Authors
 
 ## Created by
-**Alessandro Bruno**
+**Alessandro Bruno** (OpenAI Proxy for Antigravity)
 - GitHub: [@alessandrobrunoh](https://github.com/alessandrobrunoh)
