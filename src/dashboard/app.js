@@ -1,6 +1,7 @@
 // Dashboard JavaScript
 
 let refreshInterval;
+let allLogs = [];
 
 async function loadDashboard() {
   try {
@@ -112,42 +113,93 @@ async function loadLogs() {
   try {
     const response = await fetch('/admin/api/logs?limit=100');
     const data = await response.json();
-
-    const container = document.getElementById('logsContainer');
-    
-    if (!data.logs || data.logs.length === 0) {
-      container.innerHTML = '<p class="info">No requests logged yet</p>';
-      return;
-    }
-
-    let html = '<table class="logs-table"><thead><tr>';
-    html += '<th>Time</th>';
-    html += '<th>Model</th>';
-    html += '<th>Type</th>';
-    html += '<th>Duration</th>';
-    html += '<th>Status</th>';
-    html += '<th>Tokens</th>';
-    html += '</tr></thead><tbody>';
-
-    for (const log of data.logs) {
-      html += '<tr>';
-      html += `<td>${formatTimestamp(log.timestamp)}</td>`;
-      html += `<td>${escapeHtml(log.model)}</td>`;
-      html += `<td>${log.type}</td>`;
-      html += `<td>${log.duration}ms</td>`;
-      html += `<td><span class="status-badge ${log.status}">${log.status}</span></td>`;
-      html += `<td>${log.tokens || '-'}</td>`;
-      html += '</tr>';
-    }
-
-    html += '</tbody></table>';
-    container.innerHTML = html;
+    allLogs = data.logs || [];
+    renderLogs(allLogs);
   } catch (error) {
     console.error('Failed to load logs:', error);
     document.getElementById('logsContainer').innerHTML = 
       '<p class="error">Failed to load logs</p>';
   }
 }
+
+function renderLogs(logs) {
+  const container = document.getElementById('logsContainer');
+  const filter = document.getElementById('logsFilter').value.toLowerCase();
+
+  const filteredLogs = logs.filter(log => {
+    if (!filter) return true;
+    return (
+      log.model.toLowerCase().includes(filter) ||
+      log.status.toLowerCase().includes(filter) ||
+      log.type.toLowerCase().includes(filter)
+    );
+  });
+  
+  if (filteredLogs.length === 0) {
+    container.innerHTML = '<p class="info">No matching requests found</p>';
+    return;
+  }
+
+  let html = '<table class="logs-table"><thead><tr>';
+  html += '<th>Time</th>';
+  html += '<th>Model</th>';
+  html += '<th>Type</th>';
+  html += '<th>Duration</th>';
+  html += '<th>Status</th>';
+  html += '<th>Tokens</th>';
+  html += '<th>Details</th>';
+  html += '</tr></thead><tbody>';
+
+  for (const log of filteredLogs) {
+    html += `<tr onclick="openDetails('${log.id}')">`;
+    html += `<td>${formatTimestamp(log.timestamp)}</td>`;
+    html += `<td>${escapeHtml(log.model)}</td>`;
+    html += `<td>${log.type}</td>`;
+    html += `<td>${log.duration}ms</td>`;
+    html += `<td><span class="status-badge ${log.status}">${log.status}</span></td>`;
+    html += `<td>${log.tokens || '-'}</td>`;
+    html += `<td><button class="btn btn-sm">View</button></td>`;
+    html += '</tr>';
+  }
+
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function openDetails(logId) {
+  const log = allLogs.find(l => l.id === logId);
+  if (!log) return;
+
+  const modal = document.getElementById('detailsModal');
+  const requestEl = document.getElementById('modalRequest');
+  const responseEl = document.getElementById('modalResponse');
+
+  requestEl.textContent = log.request ? JSON.stringify(log.request, null, 2) : '(no data)';
+  
+  if (typeof log.response === 'string') {
+    responseEl.textContent = log.response; // For accumulated stream strings
+  } else {
+    responseEl.textContent = log.response ? JSON.stringify(log.response, null, 2) : '(no data)';
+  }
+
+  modal.style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('detailsModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('detailsModal');
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+}
+
+document.getElementById('logsFilter').addEventListener('input', () => {
+  renderLogs(allLogs);
+});
 
 async function refreshLogs() {
   await loadLogs();
@@ -189,6 +241,22 @@ function formatTimestamp(timestamp) {
   const date = new Date(timestamp);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
+  
+  // Handle future dates (e.g. rate limit resets)
+  if (diffMs < 0) {
+    const absDiffMs = Math.abs(diffMs);
+    const diffSecs = Math.floor(absDiffMs / 1000);
+    const diffMins = Math.floor(absDiffMs / 60000);
+
+    if (diffSecs < 60) {
+      return `in ${diffSecs}s`;
+    } else if (diffMins < 60) {
+      return `in ${diffMins}m ${Math.floor((absDiffMs % 60000) / 1000)}s`;
+    } else {
+      return `in ${Math.floor(diffMins / 60)}h ${diffMins % 60}m`;
+    }
+  }
+
   const diffMins = Math.floor(diffMs / 60000);
 
   if (diffMins < 1) {

@@ -131,6 +131,11 @@ export default async function chatRoutes(server: FastifyInstance) {
         // Make request to Antigravity
         const response = await fetch(url, init);
 
+        // Debug: Log headers to check for rate limit info
+        const headerObj: Record<string, string> = {};
+        response.headers.forEach((val, key) => { headerObj[key] = val; });
+        log.debug('Antigravity Response Headers', { headers: headerObj, status: response.status });
+
         // Handle rate limits
         if (response.status === 429) {
           log.warn('Rate limited', {
@@ -181,8 +186,11 @@ export default async function chatRoutes(server: FastifyInstance) {
             'Connection': 'keep-alive',
           });
 
+          let streamBuffer = '';
+
           // Convert and stream
           for await (const chunk of adapter.convertStream(response.body!, openaiReq.model)) {
+            streamBuffer += chunk;
             reply.raw.write(chunk);
           }
 
@@ -191,7 +199,15 @@ export default async function chatRoutes(server: FastifyInstance) {
           // Record metrics
           const duration = Date.now() - startTime;
           metricsService.recordRequest(openaiReq.model, duration, 'success');
-          logService.logRequest(openaiReq.model, 'stream', duration, 'success');
+          logService.logRequest(
+            openaiReq.model,
+            'stream',
+            duration,
+            'success',
+            undefined, // tokens not easily available for stream
+            openaiReq,
+            streamBuffer
+          );
 
           return;
         }
@@ -207,7 +223,9 @@ export default async function chatRoutes(server: FastifyInstance) {
           'completion',
           duration,
           'success',
-          openaiResponse.usage?.total_tokens
+          openaiResponse.usage?.total_tokens,
+          openaiReq,
+          openaiResponse
         );
 
         return reply.send(openaiResponse);
@@ -219,7 +237,15 @@ export default async function chatRoutes(server: FastifyInstance) {
         });
 
         metricsService.recordRequest(openaiReq.model, Date.now() - startTime, 'error');
-        logService.logRequest(openaiReq.model, 'completion', Date.now() - startTime, 'error');
+        logService.logRequest(
+          openaiReq.model,
+          'completion',
+          Date.now() - startTime,
+          'error',
+          undefined,
+          openaiReq,
+          { error: String(error) }
+        );
 
         return reply.status(500).send({
           error: {

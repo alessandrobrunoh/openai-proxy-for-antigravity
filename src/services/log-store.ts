@@ -15,18 +15,34 @@ export interface RequestLog {
   duration: number;
   status: 'success' | 'error';
   tokens?: number;
+  request?: any;
+  response?: any;
 }
 
 export class LogService {
   private logs: RequestLog[] = [];
   private maxLogs = 1000;
+  private maxPayloadSize = 50 * 1024; // 50KB
+
+  private truncate(data: any): any {
+    if (!data) return data;
+    const str = JSON.stringify(data);
+    if (str.length <= this.maxPayloadSize) return data;
+    return {
+      _truncated: true,
+      originalLength: str.length,
+      preview: str.slice(0, this.maxPayloadSize) + '... (truncated)'
+    };
+  }
 
   logRequest(
     model: string,
     type: RequestLog['type'],
     duration: number,
     status: RequestLog['status'],
-    tokens?: number
+    tokens?: number,
+    request?: any,
+    response?: any
   ): void {
     const logEntry: RequestLog = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
@@ -36,6 +52,8 @@ export class LogService {
       duration,
       status,
       tokens,
+      request: this.truncate(request),
+      response: this.truncate(response),
     };
 
     this.logs.push(logEntry);

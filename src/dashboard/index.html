@@ -52,6 +52,7 @@
     <section class="logs-section">
       <h2>Recent Requests</h2>
       <div class="logs-controls">
+        <input type="text" id="logsFilter" placeholder="Filter by model, type, status..." class="filter-input">
         <button onclick="refreshLogs()" class="btn">Refresh</button>
         <button onclick="clearLogs()" class="btn btn-danger">Clear Logs</button>
       </div>
@@ -59,6 +60,26 @@
         <p class="loading">Loading logs...</p>
       </div>
     </section>
+  </div>
+
+  <!-- Details Modal -->
+  <div id="detailsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Request Details</h3>
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="detail-group">
+          <h4>Request</h4>
+          <pre id="modalRequest" class="code-block"></pre>
+        </div>
+        <div class="detail-group">
+          <h4>Response</h4>
+          <pre id="modalResponse" class="code-block"></pre>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="/admin/static/app.js"></script>
