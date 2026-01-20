@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity Proxy - Dashboard</title>
+  <link rel="stylesheet" href="/admin/static/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Antigravity Proxy</h1>
+      <p class="subtitle">OpenAI-compatible proxy for Google Antigravity API</p>
+    </header>
+
+    <section class="status-section">
+      <h2>Server Status</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Uptime</div>
+          <div class="stat-value" id="uptime">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Requests</div>
+          <div class="stat-value" id="totalRequests">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Success Rate</div>
+          <div class="stat-value" id="successRate">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Duration</div>
+          <div class="stat-value" id="avgDuration">-</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="accounts-section">
+      <h2>Accounts</h2>
+      <div id="accountsContainer">
+        <p class="loading">Loading accounts...</p>
+      </div>
+    </section>
+
+    <section class="metrics-section">
+      <h2>Usage Metrics (Last 24h)</h2>
+      <div id="metricsContainer">
+        <p class="loading">Loading metrics...</p>
+      </div>
+    </section>
+
+    <section class="logs-section">
+      <h2>Recent Requests</h2>
+      <div class="logs-controls">
+        <button onclick="refreshLogs()" class="btn">Refresh</button>
+        <button onclick="clearLogs()" class="btn btn-danger">Clear Logs</button>
+      </div>
+      <div id="logsContainer">
+        <p class="loading">Loading logs...</p>
+      </div>
+    </section>
+  </div>
+
+  <script src="/admin/static/app.js"></script>
+</body>
+</html>

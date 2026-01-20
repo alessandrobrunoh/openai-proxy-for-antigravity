@@ -1,0 +1,51 @@
+{
+  "name": "antigravity-proxy",
+  "version": "1.0.0",
+  "description": "OpenAI-compatible proxy for Google Antigravity API - enables Zed IDE integration",
+  "main": "dist/server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc && cp -r src/dashboard dist/",
+    "dev": "tsx watch src/server.ts",
+    "start": "node dist/server.js",
+    "auth": "tsx scripts/oauth-cli.ts",
+    "generate-zed-config": "tsx scripts/generate-zed-config.ts",
+    "install-service": "bash scripts/install-macos-service.sh",
+    "uninstall-service": "bash scripts/uninstall-macos-service.sh",
+    "docker:build": "docker build -f docker/Dockerfile -t antigravity-proxy .",
+    "docker:up": "docker-compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f docker/docker-compose.yml down",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "antigravity",
+    "google",
+    "gemini",
+    "claude",
+    "proxy",
+    "openai",
+    "zed",
+    "ai",
+    "llm"
+  ],
+  "author": "noefabris",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@fastify/static": "^8.0.2",
+    "@openauthjs/openauth": "^0.4.3",
+    "fastify": "^5.2.0",
+    "proper-lockfile": "^4.1.2",
+    "xdg-basedir": "^5.1.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/proper-lockfile": "^4.1.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

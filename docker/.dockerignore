@@ -1,0 +1,37 @@
+# Docker-specific ignores
+node_modules
+npm-debug.log
+
+# Source files (only built artifacts needed)
+src
+tsconfig.json
+.gitignore
+
+# Development files
+.git
+.vscode
+.idea
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs
+
+# Test files
+**/*.test.ts
+coverage
+
+# Documentation
+docs
+README.md
+
+# Scripts (not needed in container)
+scripts
+
+# Temporary files
+*.tmp
+.cache

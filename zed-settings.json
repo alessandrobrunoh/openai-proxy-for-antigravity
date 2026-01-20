@@ -1,0 +1,67 @@
+{
+  "language_models": {
+    "openai_compatible": {
+      "Antigravity": {
+        "api_url": "http://localhost:3000/v1",
+        "available_models": [
+          {
+            "name": "antigravity-gemini-3-pro",
+            "display_name": "Gemini 3 Pro (Antigravity)",
+            "max_tokens": 1048576,
+            "max_output_tokens": 65535,
+            "supports_tools": true,
+            "supports_images": true
+          },
+          {
+            "name": "antigravity-gemini-3-flash",
+            "display_name": "Gemini 3 Flash (Antigravity)",
+            "max_tokens": 1048576,
+            "max_output_tokens": 65536,
+            "supports_tools": true,
+            "supports_images": true
+          },
+          {
+            "name": "antigravity-claude-sonnet-4-5",
+            "display_name": "Claude Sonnet 4.5 (Antigravity)",
+            "max_tokens": 200000,
+            "max_output_tokens": 64000,
+            "supports_tools": true,
+            "supports_images": true
+          },
+          {
+            "name": "antigravity-claude-sonnet-4-5-thinking",
+            "display_name": "Claude Sonnet 4.5 Thinking (Antigravity)",
+            "max_tokens": 200000,
+            "max_output_tokens": 64000,
+            "supports_tools": true,
+            "supports_images": true
+          },
+          {
+            "name": "antigravity-claude-opus-4-5-thinking",
+            "display_name": "Claude Opus 4.5 Thinking (Antigravity)",
+            "max_tokens": 200000,
+            "max_output_tokens": 64000,
+            "supports_tools": true,
+            "supports_images": true
+          },
+          {
+            "name": "gemini-2.5-flash",
+            "display_name": "Gemini 2.5 Flash (CLI)",
+            "max_tokens": 1048576,
+            "max_output_tokens": 65536,
+            "supports_tools": true,
+            "supports_images": true
+          },
+          {
+            "name": "gemini-2.5-pro",
+            "display_name": "Gemini 2.5 Pro (CLI)",
+            "max_tokens": 1048576,
+            "max_output_tokens": 65536,
+            "supports_tools": true,
+            "supports_images": true
+          }
+        ]
+      }
+    }
+  }
+}
